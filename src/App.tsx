@@ -261,6 +261,15 @@ export default function App() {
     setPage("dashboard");
   }
 
+  function clearAllData(): void {
+    setData((current) => ({
+      ...current,
+      players: [],
+      records: []
+    }));
+    setPage("dashboard");
+  }
+
   function updateMinimumLeaderboardGames(value: number): void {
     setData((current) => ({
       ...current,
@@ -350,6 +359,7 @@ export default function App() {
             minimumLeaderboardGames={data.settings.minimumLeaderboardGames}
             onMinimumLeaderboardGamesChange={updateMinimumLeaderboardGames}
             onResetSamples={resetSamples}
+            onClearAllData={clearAllData}
           />
         )}
       </main>

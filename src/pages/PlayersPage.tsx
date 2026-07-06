@@ -1,7 +1,7 @@
 import { CheckCircle2, Pencil, Plus, Trash2 } from "lucide-react";
 import { FormEvent, useMemo, useState } from "react";
 import { GameRecord, Player, PlayerStats } from "../types";
-import { formatNumber, formatPoint, formatRate } from "../utils/format";
+import { formatRate } from "../utils/format";
 
 type Props = {
   players: Player[];
@@ -117,8 +117,6 @@ export function PlayersPage({
                 <th>总局数</th>
                 <th>1位率</th>
                 <th>平均排名</th>
-                <th>总成绩点</th>
-                <th>平均分</th>
                 <th>操作</th>
               </tr>
             </thead>
@@ -146,8 +144,6 @@ export function PlayersPage({
                     <td>{playerStats?.totalGames ?? 0}</td>
                     <td>{formatRate(playerStats?.rank1Rate ?? 0)}</td>
                     <td>{playerStats?.averageRank ? playerStats.averageRank.toFixed(2) : "-"}</td>
-                    <td>{formatPoint(playerStats?.totalAdjustedPoint ?? 0)}</td>
-                    <td>{formatNumber(Math.round(playerStats?.averageScore ?? 0))}</td>
                     <td>
                       <div className="button-cluster">
                         <button type="button" className="icon-button" onClick={() => startEditing(player)} title="编辑名字">

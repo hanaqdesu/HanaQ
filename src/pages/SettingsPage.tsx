@@ -1,7 +1,6 @@
-import { Download, RotateCcw } from "lucide-react";
+import { Download, RotateCcw, Trash2 } from "lucide-react";
 import { exportToExcel } from "../lib/exportToExcel";
 import { GameRecord, Player, PlayerStats } from "../types";
-import { formatNumber } from "../utils/format";
 
 type Props = {
   players: Player[];
@@ -10,6 +9,7 @@ type Props = {
   minimumLeaderboardGames: number;
   onMinimumLeaderboardGamesChange: (value: number) => void;
   onResetSamples: () => void;
+  onClearAllData: () => void;
 };
 
 export function SettingsPage({
@@ -18,11 +18,18 @@ export function SettingsPage({
   stats,
   minimumLeaderboardGames,
   onMinimumLeaderboardGamesChange,
-  onResetSamples
+  onResetSamples,
+  onClearAllData
 }: Props) {
   function resetSamples() {
     if (window.confirm("确认清空当前数据并重新写入测试玩家和测试对局吗？")) {
       onResetSamples();
+    }
+  }
+
+  function clearAllData() {
+    if (window.confirm("确认清除所有数据吗？这会删除全部雀士和对局记录，且无法撤销。")) {
+      onClearAllData();
     }
   }
 
@@ -42,16 +49,8 @@ export function SettingsPage({
             <strong>{players.length}</strong>
           </div>
           <div>
-            <span>启用玩家</span>
-            <strong>{players.filter((player) => player.active).length}</strong>
-          </div>
-          <div>
             <span>对局记录</span>
             <strong>{records.length}</strong>
-          </div>
-          <div>
-            <span>原始分合计</span>
-            <strong>{formatNumber(stats.reduce((sum, stat) => sum + stat.totalScore, 0))}</strong>
           </div>
         </div>
       </section>
@@ -90,6 +89,10 @@ export function SettingsPage({
           <button type="button" className="danger-button" onClick={resetSamples}>
             <RotateCcw aria-hidden="true" size={18} />
             重置测试数据
+          </button>
+          <button type="button" className="danger-button" onClick={clearAllData}>
+            <Trash2 aria-hidden="true" size={18} />
+            清除所有数据
           </button>
         </div>
       </section>
