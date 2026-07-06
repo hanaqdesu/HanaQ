@@ -139,7 +139,7 @@ export function NewGamePage({ players, onCreateRecord }: Props) {
         </div>
 
         {activePlayers.length < 3 && (
-          <p className="error-box">可用玩家少于 3 名，请先到雀士新增玩家。</p>
+          <p className="error-box">在店雀士少于 3 名，请先到雀士页面确认进店。</p>
         )}
 
         <div className="player-picker">

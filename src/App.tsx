@@ -202,6 +202,15 @@ export default function App() {
     return null;
   }
 
+  function setPlayerInStore(playerId: string, inStore: boolean): void {
+    setData((current) => ({
+      ...current,
+      players: current.players.map((player) =>
+        player.id === playerId ? { ...player, active: inStore } : player
+      )
+    }));
+  }
+
   function createRecord(input: GameRecordInput): string[] {
     const errors = validateRecordInput(input);
     if (errors.length > 0) {
@@ -289,8 +298,7 @@ export default function App() {
           <p className="author-line">Designed and built by hanaq</p>
         </div>
         <div className="header-meta">
-          <span>{data.records.length} 局</span>
-          <span>{data.players.filter((player) => player.active).length} 名可用玩家</span>
+          <span>{data.players.filter((player) => player.active).length} 名在店雀士</span>
           <span className={`sync-pill ${cloudStatus}`}>{cloudMessage}</span>
         </div>
       </header>
@@ -329,6 +337,7 @@ export default function App() {
             onAddPlayer={addPlayer}
             onUpdatePlayerName={updatePlayerName}
             onDeletePlayer={deletePlayer}
+            onSetPlayerInStore={setPlayerInStore}
           />
         )}
         {page === "new-game" && (

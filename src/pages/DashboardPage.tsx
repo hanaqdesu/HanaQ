@@ -35,7 +35,7 @@ export function DashboardPage({ players, records, stats, onNavigate }: Props) {
         <button type="button" className="metric-tile" onClick={() => onNavigate("players")}>
           <UsersRound aria-hidden="true" />
           <span>{activePlayers}</span>
-          <small>可用玩家 / 共 {players.length} 名</small>
+          <small>在店雀士 / 共 {players.length} 名</small>
         </button>
         <button type="button" className="metric-tile" onClick={() => onNavigate("records")}>
           <BarChart3 aria-hidden="true" />

@@ -1,4 +1,4 @@
-import { CheckCircle2, Pencil, Plus, Trash2 } from "lucide-react";
+import { CheckCircle2, DoorClosed, DoorOpen, Pencil, Plus, Trash2 } from "lucide-react";
 import { FormEvent, useMemo, useState } from "react";
 import { GameRecord, Player, PlayerStats } from "../types";
 import { formatRate } from "../utils/format";
@@ -10,6 +10,7 @@ type Props = {
   onAddPlayer: (name: string) => string | null;
   onUpdatePlayerName: (playerId: string, name: string) => string | null;
   onDeletePlayer: (playerId: string) => string | null;
+  onSetPlayerInStore: (playerId: string, inStore: boolean) => void;
 };
 
 export function PlayersPage({
@@ -18,7 +19,8 @@ export function PlayersPage({
   stats,
   onAddPlayer,
   onUpdatePlayerName,
-  onDeletePlayer
+  onDeletePlayer,
+  onSetPlayerInStore
 }: Props) {
   const [name, setName] = useState("");
   const [message, setMessage] = useState<string | null>(null);
@@ -80,6 +82,11 @@ export function PlayersPage({
     setMessage(notice ?? "玩家及相关数据已删除。");
   }
 
+  function setInStore(player: Player, inStore: boolean) {
+    onSetPlayerInStore(player.id, inStore);
+    setMessage(`${player.name} 已${inStore ? "进店" : "退店"}。`);
+  }
+
   return (
     <div className="stack">
       <section className="panel">
@@ -114,6 +121,7 @@ export function PlayersPage({
             <thead>
               <tr>
                 <th>玩家</th>
+                <th>店内状态</th>
                 <th>总局数</th>
                 <th>1位率</th>
                 <th>平均排名</th>
@@ -138,8 +146,20 @@ export function PlayersPage({
                           </button>
                         </form>
                       ) : (
-                        <strong>{player.name}</strong>
+                        <span className="player-name-with-light">
+                          <span
+                            className={`store-light ${player.active ? "in" : "out"}`}
+                            aria-label={player.active ? "在店里" : "不在店里"}
+                            title={player.active ? "在店里" : "不在店里"}
+                          />
+                          <strong>{player.name}</strong>
+                        </span>
                       )}
+                    </td>
+                    <td>
+                      <span className={`status ${player.active ? "active" : "inactive"}`}>
+                        {player.active ? "在店" : "不在店"}
+                      </span>
                     </td>
                     <td>{playerStats?.totalGames ?? 0}</td>
                     <td>{formatRate(playerStats?.rank1Rate ?? 0)}</td>
@@ -148,6 +168,24 @@ export function PlayersPage({
                       <div className="button-cluster">
                         <button type="button" className="icon-button" onClick={() => startEditing(player)} title="编辑名字">
                           <Pencil aria-hidden="true" size={17} />
+                        </button>
+                        <button
+                          type="button"
+                          className="icon-button"
+                          onClick={() => setInStore(player, true)}
+                          disabled={player.active}
+                          title="进店"
+                        >
+                          <DoorOpen aria-hidden="true" size={17} />
+                        </button>
+                        <button
+                          type="button"
+                          className="icon-button"
+                          onClick={() => setInStore(player, false)}
+                          disabled={!player.active}
+                          title="退店"
+                        >
+                          <DoorClosed aria-hidden="true" size={17} />
                         </button>
                         <button
                           type="button"

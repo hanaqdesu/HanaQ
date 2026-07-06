@@ -17,13 +17,15 @@ type Leaderboard = {
   value: (stat: PlayerStats) => string;
 };
 
+type RecentWindowOption = 5 | 10 | 20 | "all";
+
 export function StatsPage({
   records,
   stats,
   minimumLeaderboardGames,
   onMinimumLeaderboardGamesChange
 }: Props) {
-  const [recentWindow, setRecentWindow] = useState<5 | 10 | 20>(5);
+  const [recentWindow, setRecentWindow] = useState<RecentWindowOption>(5);
 
   const playedStats = stats.filter((stat) => stat.totalGames > 0);
   const averageStats = playedStats.filter((stat) => stat.totalGames >= minimumLeaderboardGames);
@@ -59,7 +61,15 @@ export function StatsPage({
   const recentRows = playedStats
     .map((stat) => ({
       stat,
-      recent: stat.recent[recentWindow]
+      recent:
+        recentWindow === "all"
+          ? {
+              games: stat.totalGames,
+              averageRank: stat.averageRank,
+              totalAdjustedPoint: stat.totalAdjustedPoint,
+              averageAdjustedPoint: stat.averageAdjustedPoint
+            }
+          : stat.recent[recentWindow]
     }))
     .filter((item) => item.recent.games > 0)
     .sort((left, right) => right.recent.totalAdjustedPoint - left.recent.totalAdjustedPoint);
@@ -96,8 +106,12 @@ export function StatsPage({
             <span>最近表现范围</span>
             <select
               value={recentWindow}
-              onChange={(event) => setRecentWindow(Number(event.target.value) as 5 | 10 | 20)}
+              onChange={(event) => {
+                const value = event.target.value;
+                setRecentWindow(value === "all" ? "all" : (Number(value) as 5 | 10 | 20));
+              }}
             >
+              <option value="all">全部</option>
               <option value={5}>最近 5 局</option>
               <option value={10}>最近 10 局</option>
               <option value={20}>最近 20 局</option>
@@ -151,7 +165,7 @@ export function StatsPage({
             <h2>最近表现</h2>
             <p>按每名玩家最近参与的对局统计，不受其他玩家对局影响。</p>
           </div>
-          <span className="pill">最近 {recentWindow} 局</span>
+          <span className="pill">{recentWindow === "all" ? "全部" : `最近 ${recentWindow} 局`}</span>
         </div>
         <div className="table-wrap">
           <table>
