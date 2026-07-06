@@ -1,0 +1,18 @@
+{
+  "name": "三人麻将分数记录 | hanaq",
+  "short_name": "hanaq 三麻记分",
+  "description": "三人麻将分数记录、统计和 Excel 导出工具，由 hanaq 制作",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#121815",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
